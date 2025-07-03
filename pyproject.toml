@@ -10,7 +10,23 @@ python = ">=3.12,<3.13"
 django = "5.2"
 python-dotenv = "^1.1.1"
 
+[tool.poetry.group.dev.dependencies]
+ruff = "^0.12.1"
 
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
+
+[tool.ruff]
+line-length = 88
+target-version = "py312"
+exclude = ["migrations", "__pycache__", "venv", ".venv", "env"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I"]
+ignore = ["E501", "E203"]
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+line-ending = "auto"
