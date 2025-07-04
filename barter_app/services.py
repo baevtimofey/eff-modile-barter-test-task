@@ -21,6 +21,20 @@ class AdService:
     def get_all_ads(self) -> django.db.models.QuerySet[models.Ad]:
         """Получает все объявления."""
         return self._repo.get_all()
+    
+    def get_filtered_ads(
+        self,
+        *,
+        search_query: str | None = None,
+        category_slug: str | None = None,
+        condition: str | None = None,
+    ) -> django.db.models.QuerySet[models.Ad]:
+        """Получает отфильтрованный список объявлений."""
+        return self._repo.get_filtered_ads(
+            search_query=search_query,
+            category_slug=category_slug,
+            condition=condition,
+        )
 
     def create_ad(
         self,

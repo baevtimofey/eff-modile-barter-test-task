@@ -1,10 +1,11 @@
-from barter_app.repositories import base
+import django.db.models
 
 from barter_app import (
     dto,
     exceptions,
     models,
 )
+from barter_app.repositories import base
 
 
 class AdRepository(base.BaseRepository[models.Ad]):
@@ -32,6 +33,27 @@ class AdRepository(base.BaseRepository[models.Ad]):
             return models.Ad.objects.get(pk=ad_id)
         except models.Ad.DoesNotExist as err:
             raise exceptions.AdDoesNotExistError from err
+    
+    @staticmethod
+    def get_filtered_ads(
+        *,
+        search_query: str | None = None,
+        category_slug: str | None = None,
+        condition: str | None = None,
+    ) -> django.db.models.QuerySet[models.Ad]:
+        """Получает отфильтрованный список объявлений."""
+        queryset = models.Ad.objects.all()
+        if search_query:
+            queryset = queryset.filter(
+                django.db.models.Q(title__icontains=search_query)
+                | django.db.models.Q(description__icontains=search_query)
+            )
+        if category_slug:
+            queryset = queryset.filter(category__slug=category_slug)
+        if condition:
+            queryset = queryset.filter(condition=condition)
+            
+        return queryset
 
     @staticmethod
     def delete(*, ad_id: int) -> None:

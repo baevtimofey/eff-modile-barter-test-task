@@ -24,13 +24,21 @@ class AdListView(django.views.generic.ListView):
     context_object_name = "ads"
     paginate_by = 10
 
-    def get_queryset(self) -> django.db.models.QuerySet[models.Ad]:
-        """Получение списка объявлений."""
-        return self.ad_service.get_all_ads()
+    def get_queryset(self) -> django.db.models.QuerySet:
+        """Получение отфильтрованного списка объявлений."""
+        return self.ad_service.get_filtered_ads(
+            search_query=self.request.GET.get("q"),
+            category_slug=self.request.GET.get("category"),
+            condition=self.request.GET.get("condition")
+        )
 
     def get_context_data(self, **kwargs: dict) -> dict:
         context = super().get_context_data(**kwargs)
         context["categories"] = self.category_service.get_all_categories()
+        context["q"] = self.request.GET.get("q", "")
+        context["selected_category"] = self.request.GET.get("category", "")
+        context["selected_condition"] = self.request.GET.get("condition", "")
+        context["condition_choices"] = models.Ad.Condition.choices
         return context
 
 
