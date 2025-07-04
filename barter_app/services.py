@@ -48,3 +48,14 @@ class AdService:
     def delete_ad(self, *, ad_id: int) -> None:
         """Удаляет объявление."""
         self._repo.delete(ad_id=ad_id)
+
+
+class CategoryService:
+    """Сервис для бизнес-логики, связанной с категориями."""
+
+    def __init__(self) -> None:
+        self._repo: repositories.CategoryRepository = repositories.CategoryRepository()
+
+    def get_all_categories(self) -> django.db.models.QuerySet[models.Category]:
+        """Получает все категории."""
+        return self._repo.get_all()

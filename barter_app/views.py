@@ -18,6 +18,7 @@ class AdListView(django.views.generic.ListView):
     """Контроллер для отображения списка объявлений."""
 
     ad_service: services.AdService = services.AdService()
+    category_service: services.CategoryService = services.CategoryService()
 
     template_name = "barter_app/ad_list.html"
     context_object_name = "ads"
@@ -26,6 +27,11 @@ class AdListView(django.views.generic.ListView):
     def get_queryset(self) -> django.db.models.QuerySet[models.Ad]:
         """Получение списка объявлений."""
         return self.ad_service.get_all_ads()
+
+    def get_context_data(self, **kwargs: dict) -> dict:
+        context = super().get_context_data(**kwargs)
+        context["categories"] = self.category_service.get_all_categories()
+        return context
 
 
 class AdCreateView(

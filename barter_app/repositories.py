@@ -42,3 +42,12 @@ class AdRepository:
     def delete(*, ad_id: int) -> None:
         """Удаляет объявление."""
         models.Ad.objects.filter(pk=ad_id).delete()
+
+
+class CategoryRepository:
+    """Репозиторий для работы с категориями."""
+
+    @staticmethod
+    def get_all() -> django.db.models.QuerySet[models.Category]:
+        """Получает все категории."""
+        return models.Category.objects.all()
