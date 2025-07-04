@@ -7,6 +7,7 @@ import django.views.generic
 from django.utils.translation import gettext_lazy as _
 
 from . import (
+    exceptions,
     forms,
     models,
     services,
@@ -68,7 +69,10 @@ class AdUpdateView(
     success_url = django.urls.reverse_lazy("barter_app:ad_list")
 
     def get_object(self) -> models.Ad:
-        return self.ad_service.get_ad_by_id(ad_id=self.kwargs["pk"])
+        try:
+            return self.ad_service.get_ad_by_id(ad_id=self.kwargs["pk"])
+        except exceptions.AdDoesNotExistError as err:
+            raise django.http.Http404 from err
 
     def test_func(self) -> bool:
         return self.get_object().user == self.request.user
@@ -88,4 +92,30 @@ class AdUpdateView(
             self.request,
             _("Объявление успешно обновлено."),
         )
+        return django.http.HttpResponseRedirect(redirect_to=self.success_url)
+
+
+class AdDeleteView(
+    django.contrib.auth.mixins.LoginRequiredMixin,
+    django.contrib.auth.mixins.UserPassesTestMixin,
+    django.views.generic.DeleteView,
+):
+    """Контроллер для удаления объявления."""
+
+    ad_service: services.AdService = services.AdService()
+
+    template_name = "barter_app/ad_confirm_delete.html"
+    success_url = django.urls.reverse_lazy("barter_app:ad_list")
+
+    def get_object(self) -> models.Ad:
+        try:
+            return self.ad_service.get_ad_by_id(ad_id=self.kwargs["pk"])
+        except exceptions.AdDoesNotExistError as err:
+            raise django.http.Http404 from err
+
+    def test_func(self) -> bool:
+        return self.get_object().user == self.request.user
+
+    def delete(self) -> django.http.HttpResponseRedirect:
+        self.ad_service.delete_ad(ad_id=self.kwargs["pk"])
         return django.http.HttpResponseRedirect(redirect_to=self.success_url)

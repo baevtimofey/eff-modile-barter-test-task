@@ -44,3 +44,7 @@ class AdService:
     ) -> models.Ad:
         """Получает объявление по ID."""
         return self._repo.get_by_id(ad_id=ad_id)
+
+    def delete_ad(self, *, ad_id: int) -> None:
+        """Удаляет объявление."""
+        self._repo.delete(ad_id=ad_id)

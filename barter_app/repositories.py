@@ -2,6 +2,7 @@ import django.db.models
 
 from . import (
     dto,
+    exceptions,
     models,
 )
 
@@ -32,4 +33,12 @@ class AdRepository:
     @staticmethod
     def get_by_id(*, ad_id: int) -> models.Ad:
         """Получает объявление по ID."""
-        return models.Ad.objects.get(pk=ad_id)
+        try:
+            return models.Ad.objects.get(pk=ad_id)
+        except models.Ad.DoesNotExist as err:
+            raise exceptions.AdDoesNotExistError from err
+
+    @staticmethod
+    def delete(*, ad_id: int) -> None:
+        """Удаляет объявление."""
+        models.Ad.objects.filter(pk=ad_id).delete()
