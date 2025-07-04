@@ -1,19 +1,14 @@
-import django.db.models
+from barter_app.repositories import base
 
-from . import (
+from barter_app import (
     dto,
     exceptions,
     models,
 )
 
 
-class AdRepository:
+class AdRepository(base.BaseRepository[models.Ad]):
     """Репозиторий для работы с объявлениями."""
-
-    @staticmethod
-    def get_all() -> django.db.models.QuerySet[models.Ad]:
-        """Получает все объявления."""
-        return models.Ad.objects.all()
 
     @staticmethod
     def create(*, ad_in: dto.CreateAdDTO) -> None:
@@ -42,12 +37,3 @@ class AdRepository:
     def delete(*, ad_id: int) -> None:
         """Удаляет объявление."""
         models.Ad.objects.filter(pk=ad_id).delete()
-
-
-class CategoryRepository:
-    """Репозиторий для работы с категориями."""
-
-    @staticmethod
-    def get_all() -> django.db.models.QuerySet[models.Category]:
-        """Получает все категории."""
-        return models.Category.objects.all()

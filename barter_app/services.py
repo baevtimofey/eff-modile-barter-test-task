@@ -3,7 +3,10 @@ import django.db.models
 from . import (
     dto,
     models,
-    repositories,
+)
+from .repositories import (
+    ad,
+    category,
 )
 
 
@@ -11,7 +14,9 @@ class AdService:
     """Сервис для бизнес-логики, связанной с объявлениями."""
 
     def __init__(self) -> None:
-        self._repo: repositories.AdRepository = repositories.AdRepository()
+        self._repo: ad.AdRepository = ad.AdRepository(
+            model_class=models.Ad,
+        )
 
     def get_all_ads(self) -> django.db.models.QuerySet[models.Ad]:
         """Получает все объявления."""
@@ -54,7 +59,9 @@ class CategoryService:
     """Сервис для бизнес-логики, связанной с категориями."""
 
     def __init__(self) -> None:
-        self._repo: repositories.CategoryRepository = repositories.CategoryRepository()
+        self._repo: category.CategoryRepository = category.CategoryRepository(
+            model_class=models.Category,
+        )
 
     def get_all_categories(self) -> django.db.models.QuerySet[models.Category]:
         """Получает все категории."""
