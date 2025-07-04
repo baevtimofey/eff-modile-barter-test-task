@@ -2,8 +2,8 @@ import dataclasses
 
 
 @dataclasses.dataclass
-class CreateAdDTO:
-    """DTO для создания нового объявления."""
+class BaseAdDTO:
+    """Базовый DTO для объявлений."""
 
     title: str
     description: str
@@ -15,3 +15,13 @@ class CreateAdDTO:
     def to_dict(self) -> dict:
         """Преобразует DTO в словарь для передачи в репозиторий."""
         return dataclasses.asdict(self)
+
+
+@dataclasses.dataclass
+class CreateAdDTO(BaseAdDTO):
+    """DTO для создания нового объявления."""
+
+
+@dataclasses.dataclass
+class UpdateAdDTO(BaseAdDTO):
+    """DTO для обновления объявления."""

@@ -24,3 +24,23 @@ class AdService:
     ) -> None:
         """Создает новое объявление."""
         self._repo.create(ad_in=ad_in)
+
+    def update_ad(
+        self,
+        *,
+        ad_edit: dto.UpdateAdDTO,
+        ad_id: int,
+    ) -> None:
+        """Обновляет объявление."""
+        self._repo.update(
+            ad_edit=ad_edit,
+            ad_id=ad_id,
+        )
+
+    def get_ad_by_id(
+        self,
+        *,
+        ad_id: int,
+    ) -> models.Ad:
+        """Получает объявление по ID."""
+        return self._repo.get_by_id(ad_id=ad_id)
