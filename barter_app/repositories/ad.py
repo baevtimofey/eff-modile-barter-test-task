@@ -11,38 +11,44 @@ from barter_app.repositories import base
 class AdRepository(base.BaseRepository[models.Ad]):
     """Репозиторий для работы с объявлениями."""
 
-    @staticmethod
-    def create(*, ad_in: dto.CreateAdDTO) -> None:
+    def create(
+        self,
+        *,
+        ad_in: dto.CreateAdDTO,
+    ) -> None:
         """Создает новое объявление."""
-        models.Ad.objects.create(**ad_in.to_dict())
+        self._model_class.objects.create(**ad_in.to_dict())
 
-    @staticmethod
     def update(
+        self,
         *,
         ad_edit: dto.UpdateAdDTO,
         ad_id: int,
     ) -> None:
         """Обновляет объявление."""
         update_data = ad_edit.to_dict()
-        models.Ad.objects.filter(pk=ad_id).update(**update_data)
+        self._model_class.objects.filter(pk=ad_id).update(**update_data)
 
-    @staticmethod
-    def get_by_id(*, ad_id: int) -> models.Ad:
+    def get_by_id(
+        self,
+        *,
+        ad_id: int,
+    ) -> models.Ad:
         """Получает объявление по ID."""
         try:
-            return models.Ad.objects.get(pk=ad_id)
-        except models.Ad.DoesNotExist as err:
+            return self._model_class.objects.get(pk=ad_id)
+        except self._model_class.DoesNotExist as err:
             raise exceptions.AdDoesNotExistError from err
     
-    @staticmethod
     def get_filtered_ads(
+        self,
         *,
         search_query: str | None = None,
         category_slug: str | None = None,
         condition: str | None = None,
     ) -> django.db.models.QuerySet[models.Ad]:
         """Получает отфильтрованный список объявлений."""
-        queryset = models.Ad.objects.all()
+        queryset = self._model_class.objects.all()
         if search_query:
             queryset = queryset.filter(
                 django.db.models.Q(title__icontains=search_query)
@@ -55,7 +61,10 @@ class AdRepository(base.BaseRepository[models.Ad]):
             
         return queryset
 
-    @staticmethod
-    def delete(*, ad_id: int) -> None:
+    def delete(
+        self,
+        *,
+        ad_id: int,
+    ) -> None:
         """Удаляет объявление."""
-        models.Ad.objects.filter(pk=ad_id).delete()
+        self._model_class.objects.filter(pk=ad_id).delete()
