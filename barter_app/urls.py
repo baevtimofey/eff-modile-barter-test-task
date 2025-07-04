@@ -6,4 +6,5 @@ app_name = "barter_app"
 
 urlpatterns = [
     path("", views.AdListView.as_view(), name="ad_list"),
+    path("new/", views.AdCreateView.as_view(), name="ad_create"),
 ]
