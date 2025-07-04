@@ -22,7 +22,7 @@ class Category(models.Model):
         verbose_name_plural = _("Категории")
         ordering = ["name"]
 
-    def __str__(self):
+    def __str__(self) -> str:
         return self.name
 
 
@@ -73,7 +73,7 @@ class Ad(models.Model):
         verbose_name_plural = _("Объявления")
         ordering = ["-created_at"]
 
-    def __str__(self):
+    def __str__(self) -> str:
         return self.title
 
 
@@ -117,5 +117,5 @@ class ExchangeProposal(models.Model):
         verbose_name_plural = _("Предложения обмена")
         ordering = ["-created_at"]
 
-    def __str__(self):
+    def __str__(self) -> str:
         return f"{self.ad_sender} -> {self.ad_receiver}"

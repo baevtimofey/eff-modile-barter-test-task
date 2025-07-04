@@ -1,5 +1,4 @@
-"""
-WSGI config for barter_project project.
+"""WSGI config for barter_project project.
 
 It exposes the WSGI callable as a module-level variable named ``application``.
 
