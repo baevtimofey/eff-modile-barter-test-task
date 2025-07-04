@@ -119,3 +119,21 @@ class AdDeleteView(
     def delete(self) -> django.http.HttpResponseRedirect:
         self.ad_service.delete_ad(ad_id=self.kwargs["pk"])
         return django.http.HttpResponseRedirect(redirect_to=self.success_url)
+
+
+class AdDetailView(
+    django.contrib.auth.mixins.LoginRequiredMixin,
+    django.views.generic.DetailView,
+):
+    """Контроллер для отображения деталей объявления."""
+
+    ad_service: services.AdService = services.AdService()
+
+    template_name = "barter_app/ad_detail.html"
+    context_object_name = "ad"
+
+    def get_object(self) -> models.Ad:
+        try:
+            return self.ad_service.get_ad_by_id(ad_id=self.kwargs["pk"])
+        except exceptions.AdDoesNotExistError as err:
+            raise django.http.Http404 from err
