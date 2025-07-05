@@ -37,3 +37,16 @@ class AdForm(django.forms.ModelForm):
             user_id=self.user.id,
             image_url=self.cleaned_data["image_url"],
         )
+
+
+class ExchangeProposalForm(django.forms.ModelForm):
+    """Форма для создания предложения обмена."""
+
+    class Meta:
+        model = models.ExchangeProposal
+        fields = ["comment", "ad_sender"]
+
+    def __init__(self, *args: P.args, **kwargs: P.kwargs) -> None:
+        exchange_ads = kwargs.pop("exchange_ads", None)
+        super().__init__(*args, **kwargs)
+        self.fields["ad_sender"].queryset = exchange_ads

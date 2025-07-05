@@ -7,6 +7,7 @@ from . import (
 from .repositories import (
     ad,
     category,
+    exchange,
 )
 
 
@@ -17,11 +18,16 @@ class AdService:
         self._repo: ad.AdRepository = ad.AdRepository(
             model_class=models.Ad,
         )
+        self._exchange_repo: exchange.ExchangeProposalRepository = (
+            exchange.ExchangeProposalRepository(
+                model_class=models.ExchangeProposal,
+            )
+        )
 
     def get_all_ads(self) -> django.db.models.QuerySet[models.Ad]:
         """Получает все объявления."""
         return self._repo.get_all()
-    
+
     def get_filtered_ads(
         self,
         *,
@@ -34,6 +40,25 @@ class AdService:
             search_query=search_query,
             category_slug=category_slug,
             condition=condition,
+        )
+
+    def get_available_exchange_ads(
+        self,
+        *,
+        sender_id: int,
+        receiver_id: int,
+    ) -> django.db.models.QuerySet[models.Ad]:
+        """
+        Получает все доступные объявления для обмена.
+
+        Исключает объявления, которые уже участвуют в текущем обмене.
+        """
+        sender_ids = self._exchange_repo.get_sender_ids_by_receiver_id(
+            receiver_id=receiver_id,
+        )
+        return self._repo.get_available_ads(
+            user_id=sender_id,
+            sender_ids=sender_ids,
         )
 
     def create_ad(

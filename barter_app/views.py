@@ -151,3 +151,15 @@ class AdDetailView(
             return self.ad_service.get_ad_by_id(ad_id=self.kwargs["pk"])
         except exceptions.AdDoesNotExistError as err:
             raise django.http.Http404 from err
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        if (sender := self.request.user) != (receiver := self.object.user):
+            exchange_ads = self.ad_service.get_available_exchange_ads(
+                sender_id=sender.id,
+                receiver_id=receiver.id,
+            )
+            context["exchange_form"] = forms.ExchangeProposalForm(
+                exchange_ads=exchange_ads,
+            )
+        return context

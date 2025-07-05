@@ -61,6 +61,17 @@ class AdRepository(base.BaseRepository[models.Ad]):
             
         return queryset
 
+    def get_available_ads(
+        self,
+        *,
+        user_id: int,
+        sender_ids: django.db.models.QuerySet[int],
+    ) -> django.db.models.QuerySet[models.Ad]:
+        """Получает доступные объявления для обмена."""
+        return self._model_class.objects.filter(user_id=user_id).exclude(
+            id__in=sender_ids
+        )
+
     def delete(
         self,
         *,
