@@ -48,5 +48,14 @@ class ExchangeProposalForm(django.forms.ModelForm):
 
     def __init__(self, *args: P.args, **kwargs: P.kwargs) -> None:
         exchange_ads = kwargs.pop("exchange_ads", None)
+        self.ad_receiver_id = kwargs.pop("ad_receiver_id", None)
         super().__init__(*args, **kwargs)
-        self.fields["ad_sender"].queryset = exchange_ads
+        if exchange_ads is not None:
+            self.fields["ad_sender"].queryset = exchange_ads
+
+    def get_data(self) -> dto.ExchangeProposalDTO:
+        return dto.ExchangeProposalDTO(
+            ad_sender_id=self.cleaned_data["ad_sender"].id,
+            ad_receiver_id=self.ad_receiver_id,
+            comment=self.cleaned_data["comment"],
+        )

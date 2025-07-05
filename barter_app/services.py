@@ -105,3 +105,27 @@ class CategoryService:
     def get_all_categories(self) -> django.db.models.QuerySet[models.Category]:
         """Получает все категории."""
         return self._repo.get_all()
+
+
+class ExchangeProposalService:
+    """Сервис для бизнес-логики, связанной с предложениями обмена."""
+
+    def __init__(self) -> None:
+        self._repo: exchange.ExchangeProposalRepository = (
+            exchange.ExchangeProposalRepository(
+                model_class=models.ExchangeProposal,
+            )
+        )
+        self._ad_repo: ad.AdRepository = ad.AdRepository(
+            model_class=models.Ad,
+        )
+
+    def create_proposal(
+        self,
+        *,
+        proposal_in: dto.ExchangeProposalDTO,
+    ) -> models.ExchangeProposal:
+        """Создает новое предложение обмена."""
+        self._ad_repo.get_by_id(ad_id=proposal_in.ad_sender_id)
+        self._ad_repo.get_by_id(ad_id=proposal_in.ad_receiver_id)
+        return self._repo.create(proposal_in=proposal_in)

@@ -29,7 +29,7 @@ class AdListView(django.views.generic.ListView):
         return self.ad_service.get_filtered_ads(
             search_query=self.request.GET.get("q"),
             category_slug=self.request.GET.get("category"),
-            condition=self.request.GET.get("condition")
+            condition=self.request.GET.get("condition"),
         )
 
     def get_context_data(self, **kwargs: dict) -> dict:
@@ -152,7 +152,7 @@ class AdDetailView(
         except exceptions.AdDoesNotExistError as err:
             raise django.http.Http404 from err
 
-    def get_context_data(self, **kwargs):
+    def get_context_data(self, **kwargs: dict) -> dict:
         context = super().get_context_data(**kwargs)
         if (sender := self.request.user) != (receiver := self.object.user):
             exchange_ads = self.ad_service.get_available_exchange_ads(
@@ -163,3 +163,36 @@ class AdDetailView(
                 exchange_ads=exchange_ads,
             )
         return context
+
+
+class ExchangeProposalCreateView(
+    django.contrib.auth.mixins.LoginRequiredMixin,
+    django.views.generic.CreateView,
+):
+    """Контроллер для создания предложения обмена."""
+
+    ad_service: services.AdService = services.AdService()
+    exchange_service: services.ExchangeProposalService = (
+        services.ExchangeProposalService()
+    )
+
+    form_class = forms.ExchangeProposalForm
+    template_name = "barter_app/exchange_proposal_form.html"
+    success_url = django.urls.reverse_lazy("barter_app:ad_list")
+
+    def get_form_kwargs(self) -> dict:
+        kwargs = super().get_form_kwargs()
+        kwargs["ad_receiver_id"] = self.kwargs.get("ad_id")
+        return kwargs
+
+    def form_valid(
+        self,
+        form: forms.ExchangeProposalForm,
+    ) -> django.http.HttpResponseRedirect:
+        proposal_in = form.get_data()
+        self.exchange_service.create_proposal(proposal_in=proposal_in)
+        django.contrib.messages.success(
+            self.request,
+            _("Предложение обмена успешно отправлено."),
+        )
+        return django.http.HttpResponseRedirect(redirect_to=self.success_url)

@@ -1,6 +1,9 @@
 import django.db.models
 
-from barter_app import models
+from barter_app import (
+    dto,
+    models,
+)
 from barter_app.repositories import base
 
 
@@ -13,8 +16,14 @@ class ExchangeProposalRepository(base.BaseRepository[models.ExchangeProposal]):
         receiver_id: int,
     ) -> django.db.models.QuerySet[int]:
         """Получить идентификаторы отправителей существующих предложений обмена."""
-        return (
-            self._model_class.objects
-            .filter(ad_receiver_id=receiver_id)
-            .values_list("ad_sender_id", flat=True)
+        return self._model_class.objects.filter(ad_receiver_id=receiver_id).values_list(
+            "ad_sender_id", flat=True
         )
+
+    def create(
+        self,
+        *,
+        proposal_in: dto.ExchangeProposalDTO,
+    ) -> models.ExchangeProposal:
+        """Создать новое предложение обмена."""
+        return self._model_class.objects.create(**proposal_in.to_dict())
