@@ -196,3 +196,26 @@ class ExchangeProposalCreateView(
             _("Предложение обмена успешно отправлено."),
         )
         return django.http.HttpResponseRedirect(redirect_to=self.success_url)
+
+
+class ProposalsListView(
+    django.contrib.auth.mixins.LoginRequiredMixin,
+    django.views.generic.ListView,
+):
+    """Контроллер для отображения списка предложений пользователя."""
+
+    template_name = "barter_app/proposals.html"
+    context_object_name = "proposals"
+    exchange_service: services.ExchangeProposalService = (
+        services.ExchangeProposalService()
+    )
+
+    def get_queryset(self) -> django.db.models.QuerySet[models.ExchangeProposal]:
+        proposal_type = self.request.GET.get("type", "sent")
+        if proposal_type == "received":
+            return self.exchange_service.get_received_proposals(
+                user_id=self.request.user.id,
+            )
+        return self.exchange_service.get_sent_proposals(
+            user_id=self.request.user.id,
+        )

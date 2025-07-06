@@ -25,3 +25,16 @@ class CreateAdDTO(BaseAdDTO):
 @dataclasses.dataclass
 class UpdateAdDTO(BaseAdDTO):
     """DTO для обновления объявления."""
+
+
+@dataclasses.dataclass
+class ExchangeProposalDTO:
+    """DTO для предложения обмена."""
+
+    ad_sender_id: int
+    ad_receiver_id: int
+    comment: str = dataclasses.field(default="")
+
+    def to_dict(self) -> dict:
+        """Преобразует DTO в словарь для передачи в репозиторий."""
+        return dataclasses.asdict(self)

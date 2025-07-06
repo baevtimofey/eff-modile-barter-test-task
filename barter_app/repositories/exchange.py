@@ -27,3 +27,23 @@ class ExchangeProposalRepository(base.BaseRepository[models.ExchangeProposal]):
     ) -> models.ExchangeProposal:
         """Создать новое предложение обмена."""
         return self._model_class.objects.create(**proposal_in.to_dict())
+
+    def get_sent_proposals(
+        self,
+        *,
+        user_id: int,
+    ) -> django.db.models.QuerySet:
+        """Получить все отправленные предложения пользователя."""
+        return self._model_class.objects.filter(
+            ad_sender__user_id=user_id
+        ).select_related("ad_sender", "ad_receiver")
+
+    def get_received_proposals(
+        self,
+        *,
+        user_id: int,
+    ) -> django.db.models.QuerySet:
+        """Получить все полученные предложения пользователя."""
+        return self._model_class.objects.filter(
+            ad_receiver__user_id=user_id
+        ).select_related("ad_sender", "ad_receiver")

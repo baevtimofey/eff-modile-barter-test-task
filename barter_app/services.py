@@ -129,3 +129,19 @@ class ExchangeProposalService:
         self._ad_repo.get_by_id(ad_id=proposal_in.ad_sender_id)
         self._ad_repo.get_by_id(ad_id=proposal_in.ad_receiver_id)
         return self._repo.create(proposal_in=proposal_in)
+
+    def get_sent_proposals(
+        self,
+        *,
+        user_id: int,
+    ) -> django.db.models.QuerySet[models.ExchangeProposal]:
+        """Получает все отправленные предложения пользователя."""
+        return self._repo.get_sent_proposals(user_id=user_id)
+
+    def get_received_proposals(
+        self,
+        *,
+        user_id: int,
+    ) -> django.db.models.QuerySet[models.ExchangeProposal]:
+        """Получает все полученные предложения пользователя."""
+        return self._repo.get_received_proposals(user_id=user_id)

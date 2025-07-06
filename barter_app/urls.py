@@ -17,4 +17,5 @@ urlpatterns = [
         views.ExchangeProposalCreateView.as_view(),
         name="create_proposal",
     ),
+    path("proposals/", views.ProposalsListView.as_view(), name="proposals"),
 ]

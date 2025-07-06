@@ -89,13 +89,13 @@ class ExchangeProposal(models.Model):
         Ad,
         on_delete=models.CASCADE,
         related_name="sent_proposals",
-        verbose_name=_("Отправитель"),
+        verbose_name=_("Ваше объявление"),
     )
     ad_receiver = models.ForeignKey(
         Ad,
         on_delete=models.CASCADE,
         related_name="received_proposals",
-        verbose_name=_("Получатель"),
+        verbose_name=_("Интересующее объявление"),
     )
     comment = models.TextField(
         _("Комментарий"),
