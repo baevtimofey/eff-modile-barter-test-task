@@ -47,3 +47,14 @@ class ExchangeProposalRepository(base.BaseRepository[models.ExchangeProposal]):
         return self._model_class.objects.filter(
             ad_receiver__user_id=user_id
         ).select_related("ad_sender", "ad_receiver")
+
+    def get_by_id(
+        self,
+        *,
+        proposal_id: int,
+    ) -> models.ExchangeProposal:
+        """Получить предложение обмена по идентификатору."""
+        try:
+            return self._model_class.objects.get(id=proposal_id)
+        except self._model_class.DoesNotExist as err:
+            raise exceptions.ProposalDoesNotExistError from err

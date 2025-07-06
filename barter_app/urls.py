@@ -18,4 +18,9 @@ urlpatterns = [
         name="create_proposal",
     ),
     path("proposals/", views.ProposalsListView.as_view(), name="proposals"),
+    path(
+        "proposals/<int:pk>/",
+        views.ExchangeProposalDetailView.as_view(),
+        name="exchange_proposal_detail",
+    ),
 ]

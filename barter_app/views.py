@@ -219,3 +219,33 @@ class ProposalsListView(
         return self.exchange_service.get_sent_proposals(
             user_id=self.request.user.id,
         )
+
+
+class ExchangeProposalDetailView(
+    django.contrib.auth.mixins.LoginRequiredMixin,
+    django.contrib.auth.mixins.UserPassesTestMixin,
+    django.views.generic.DetailView,
+):
+    """Контроллер для отображения деталей предложения обмена."""
+
+    template_name = "barter_app/exchange_proposal_detail.html"
+    context_object_name = "proposal"
+    exchange_service: services.ExchangeProposalService = (
+        services.ExchangeProposalService()
+    )
+
+    def get_object(self) -> None:
+        try:
+            proposal = self.exchange_service.get_proposal_by_id(
+                proposal_id=self.kwargs["pk"]
+            )
+        except exceptions.DoesNotExistError as err:
+            raise django.http.Http404 from err
+        else:
+            return proposal
+
+    def test_func(self) -> bool:
+        return (
+            self.get_object().ad_sender.user == self.request.user
+            or self.get_object().ad_receiver.user == self.request.user
+        )

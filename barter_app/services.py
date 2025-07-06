@@ -145,3 +145,11 @@ class ExchangeProposalService:
     ) -> django.db.models.QuerySet[models.ExchangeProposal]:
         """Получает все полученные предложения пользователя."""
         return self._repo.get_received_proposals(user_id=user_id)
+
+    def get_proposal_by_id(
+        self,
+        *,
+        proposal_id: int,
+    ) -> models.ExchangeProposal:
+        """Получает предложение обмена по ID."""
+        return self._repo.get_by_id(proposal_id=proposal_id)
