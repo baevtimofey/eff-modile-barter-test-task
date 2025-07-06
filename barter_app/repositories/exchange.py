@@ -2,6 +2,7 @@ import django.db.models
 
 from barter_app import (
     dto,
+    exceptions,
     models,
 )
 from barter_app.repositories import base
@@ -58,3 +59,31 @@ class ExchangeProposalRepository(base.BaseRepository[models.ExchangeProposal]):
             return self._model_class.objects.get(id=proposal_id)
         except self._model_class.DoesNotExist as err:
             raise exceptions.ProposalDoesNotExistError from err
+
+    def update_status(
+        self,
+        *,
+        proposal_id: int,
+        status: str,
+    ) -> models.ExchangeProposal:
+        """Обновить статус предложения обмена."""
+        proposal = self.get_by_id(proposal_id=proposal_id)
+        proposal.status = status
+        proposal.save(update_fields=["status"])
+        return proposal
+
+    def reject_other_proposals(
+        self,
+        *,
+        accepted_proposal_id: int,
+        ad_ids: list[int],
+    ) -> None:
+        """Отклоняет все другие предложения для указанных объявлений."""
+        self._model_class.objects.filter(
+            ~django.db.models.Q(id=accepted_proposal_id),
+            (
+                django.db.models.Q(ad_sender_id__in=ad_ids)
+                | django.db.models.Q(ad_receiver_id__in=ad_ids)
+            ),
+            status=self._model_class.Status.PENDING,
+        ).update(status=self._model_class.Status.REJECTED)

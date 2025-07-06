@@ -211,14 +211,19 @@ class ProposalsListView(
     )
 
     def get_queryset(self) -> django.db.models.QuerySet[models.ExchangeProposal]:
-        proposal_type = self.request.GET.get("type", "sent")
-        if proposal_type == "received":
+        self.proposal_type = self.request.GET.get("type", "sent")
+        if self.proposal_type == "received":
             return self.exchange_service.get_received_proposals(
                 user_id=self.request.user.id,
             )
         return self.exchange_service.get_sent_proposals(
             user_id=self.request.user.id,
         )
+
+    def get_context_data(self, **kwargs: dict) -> dict:
+        context = super().get_context_data(**kwargs)
+        context["proposal_type"] = self.proposal_type
+        return context
 
 
 class ExchangeProposalDetailView(
@@ -234,12 +239,12 @@ class ExchangeProposalDetailView(
         services.ExchangeProposalService()
     )
 
-    def get_object(self) -> None:
+    def get_object(self) -> models.ExchangeProposal:
         try:
             proposal = self.exchange_service.get_proposal_by_id(
                 proposal_id=self.kwargs["pk"]
             )
-        except exceptions.DoesNotExistError as err:
+        except exceptions.ProposalDoesNotExistError as err:
             raise django.http.Http404 from err
         else:
             return proposal
@@ -248,4 +253,68 @@ class ExchangeProposalDetailView(
         return (
             self.get_object().ad_sender.user == self.request.user
             or self.get_object().ad_receiver.user == self.request.user
+        )
+
+    def get_context_data(self, **kwargs: dict) -> dict:
+        context = super().get_context_data(**kwargs)
+        context["status_form"] = forms.ProposalStatusForm()
+        return context
+
+
+class UpdateProposalStatusView(
+    django.contrib.auth.mixins.LoginRequiredMixin,
+    django.contrib.auth.mixins.UserPassesTestMixin,
+    django.views.generic.FormView,
+):
+    """Контроллер для обновления статуса предложения обмена."""
+
+    exchange_service: services.ExchangeProposalService = (
+        services.ExchangeProposalService()
+    )
+    ad_service: services.AdService = services.AdService()
+
+    form_class = forms.ProposalStatusForm
+    template_name = "barter_app/exchange_proposal_detail.html"
+    context_object_name = "proposal"
+
+    def test_func(self) -> bool:
+        return self.get_object().ad_receiver.user == self.request.user
+
+    def get_object(self) -> models.ExchangeProposal:
+        self.proposal_id = self.kwargs["pk"]
+        try:
+            return self.exchange_service.get_proposal_by_id(
+                proposal_id=self.proposal_id
+            )
+        except exceptions.DoesNotExistError as err:
+            raise django.http.Http404 from err
+
+    def form_valid(
+        self,
+        form: forms.ProposalStatusForm,
+    ) -> django.http.HttpResponseRedirect:
+        status = form.get_data()
+        self.exchange_service.process_accepted_exchange(
+            proposal_id=self.proposal_id,
+            status=status,
+        )
+
+        match status:
+            case models.ExchangeProposal.Status.ACCEPTED:
+                django.contrib.messages.success(
+                    self.request,
+                    _("Обмен успешно подтвержден!"),
+                )
+            case models.ExchangeProposal.Status.REJECTED:
+                django.contrib.messages.success(
+                    self.request,
+                    _("Обмен отклонен!"),
+                )
+
+        return django.http.HttpResponseRedirect(redirect_to=self.get_success_url())
+
+    def get_success_url(self) -> str:
+        return django.urls.reverse(
+            "barter_app:exchange_proposal_detail",
+            kwargs={"pk": self.proposal_id},
         )

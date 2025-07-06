@@ -67,6 +67,10 @@ class Ad(models.Model):
         _("Дата создания"),
         auto_now_add=True,
     )
+    exchanged = models.BooleanField(
+        _("Обмен произведен"),
+        default=False,
+    )
 
     class Meta:
         verbose_name = _("Объявление")

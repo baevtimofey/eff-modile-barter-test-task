@@ -1,4 +1,5 @@
 import django.db.models
+import django.db.transaction
 
 from . import (
     dto,
@@ -153,3 +154,50 @@ class ExchangeProposalService:
     ) -> models.ExchangeProposal:
         """Получает предложение обмена по ID."""
         return self._repo.get_by_id(proposal_id=proposal_id)
+
+    @django.db.transaction.atomic
+    def process_accepted_exchange(
+        self,
+        *,
+        proposal_id: int,
+        status: str,
+    ) -> None:
+        """Обрабатывает принятое предложение обмена"""
+        proposal = self.update_proposal_status(proposal_id=proposal_id, status=status)
+        if status == models.ExchangeProposal.Status.ACCEPTED:
+            ad_sender_id = proposal.ad_sender.id
+            ad_receiver_id = proposal.ad_receiver.id
+
+            self.reject_other_proposals(
+                accepted_proposal_id=proposal_id,
+                ad_sender_id=ad_sender_id,
+                ad_receiver_id=ad_receiver_id,
+            )
+
+            self._ad_repo.mark_as_exchanged(ad_id=ad_sender_id)
+            self._ad_repo.mark_as_exchanged(ad_id=ad_receiver_id)
+
+    def update_proposal_status(
+        self,
+        *,
+        proposal_id: int,
+        status: str,
+    ) -> models.ExchangeProposal:
+        """Обновляет статус предложения обмена."""
+        return self._repo.update_status(
+            proposal_id=proposal_id,
+            status=status,
+        )
+
+    def reject_other_proposals(
+        self,
+        *,
+        accepted_proposal_id: int,
+        ad_sender_id: int,
+        ad_receiver_id: int,
+    ) -> None:
+        """Отклоняет все другие предложения для указанных объявлений."""
+        self._repo.reject_other_proposals(
+            accepted_proposal_id=accepted_proposal_id,
+            ad_ids=[ad_sender_id, ad_receiver_id],
+        )

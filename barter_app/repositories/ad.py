@@ -39,7 +39,7 @@ class AdRepository(base.BaseRepository[models.Ad]):
             return self._model_class.objects.get(pk=ad_id)
         except self._model_class.DoesNotExist as err:
             raise exceptions.AdDoesNotExistError from err
-    
+
     def get_filtered_ads(
         self,
         *,
@@ -58,8 +58,8 @@ class AdRepository(base.BaseRepository[models.Ad]):
             queryset = queryset.filter(category__slug=category_slug)
         if condition:
             queryset = queryset.filter(condition=condition)
-            
-        return queryset
+
+        return queryset.filter(exchanged=False)
 
     def get_available_ads(
         self,
@@ -79,3 +79,11 @@ class AdRepository(base.BaseRepository[models.Ad]):
     ) -> None:
         """Удаляет объявление."""
         self._model_class.objects.filter(pk=ad_id).delete()
+
+    def mark_as_exchanged(
+        self,
+        *,
+        ad_id: int,
+    ) -> None:
+        """Помечает объявление как обменянное."""
+        self._model_class.objects.filter(pk=ad_id).update(exchanged=True)

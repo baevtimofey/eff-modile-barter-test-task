@@ -23,4 +23,9 @@ urlpatterns = [
         views.ExchangeProposalDetailView.as_view(),
         name="exchange_proposal_detail",
     ),
+    path(
+        "proposals/<int:pk>/status/",
+        views.UpdateProposalStatusView.as_view(),
+        name="update_proposal_status",
+    ),
 ]

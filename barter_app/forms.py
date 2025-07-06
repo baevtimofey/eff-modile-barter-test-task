@@ -59,3 +59,10 @@ class ExchangeProposalForm(django.forms.ModelForm):
             ad_receiver_id=self.ad_receiver_id,
             comment=self.cleaned_data["comment"],
         )
+
+
+class ProposalStatusForm(django.forms.Form):
+    status = django.forms.ChoiceField(choices=models.ExchangeProposal.Status.choices)
+
+    def get_data(self) -> str:
+        return self.cleaned_data["status"]
