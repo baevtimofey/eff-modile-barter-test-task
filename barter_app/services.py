@@ -15,12 +15,18 @@ from .repositories import (
 class AdService:
     """Сервис для бизнес-логики, связанной с объявлениями."""
 
-    def __init__(self) -> None:
-        self._repo: ad.AdRepository = ad.AdRepository(
+    def __init__(
+        self,
+        *,
+        ad_repo: ad.AdRepository | None = None,
+        exchange_repo: exchange.ExchangeProposalRepository | None = None,
+    ) -> None:
+        self._repo: ad.AdRepository = ad_repo or ad.AdRepository(
             model_class=models.Ad,
         )
         self._exchange_repo: exchange.ExchangeProposalRepository = (
-            exchange.ExchangeProposalRepository(
+            exchange_repo
+            or exchange.ExchangeProposalRepository(
                 model_class=models.ExchangeProposal,
             )
         )
