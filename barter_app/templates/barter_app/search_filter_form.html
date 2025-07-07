@@ -1,0 +1,35 @@
+{% load static %}
+
+<form class="search-filters" method="get" action="{% url 'barter_app:ad_list' %}">
+    <div class="search-filters__group">
+        <label for="search-query" class="search-filters__label">Поиск:</label>
+        <input type="text" id="search-query" name="q" class="search-filters__input" 
+               placeholder="Что вы ищете?" value="{{ q }}">
+    </div>
+    
+    <div class="search-filters__group">
+        <label for="category-filter" class="search-filters__label">Категория:</label>
+        <select id="category-filter" name="category" class="search-filters__select">
+            <option value="">Все категории</option>
+            {% for category in categories %}
+            <option value="{{ category.slug }}" {% if selected_category == category.slug %}selected{% endif %}>
+                {{ category.name }}
+            </option>
+            {% endfor %}
+        </select>
+    </div>
+    
+    <div class="search-filters__group">
+        <label for="condition-filter" class="search-filters__label">Состояние:</label>
+        <select id="condition-filter" name="condition" class="search-filters__select">
+            <option value="">Любое состояние</option>
+            {% for value, name in condition_choices %}
+            <option value="{{ value }}" {% if selected_condition == value %}selected{% endif %}>
+                {{ name }}
+            </option>
+            {% endfor %}
+        </select>
+    </div>
+    
+    <button type="submit" class="button button--primary search-filters__button">Найти</button>
+</form>

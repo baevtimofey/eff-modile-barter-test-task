@@ -1,0 +1,129 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ ad.title }} | Бартер{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-8">
+        <article class="ad-detail">
+            <!-- Изображение -->
+            <div class="ad-detail__image">
+                {% if ad.image_url %}
+                    <img class="ad-detail__image-img" src="{{ ad.image_url }}" alt="{{ ad.title }}">
+                {% else %}
+                    <span class="ad-detail__image-placeholder">Нет изображения</span>
+                {% endif %}
+            </div>
+            
+            <!-- Название -->
+            <h1 class="ad-detail__title">{{ ad.title }}</h1>
+            
+            <!-- Мета информация -->
+            <div class="ad-detail__meta">
+                <span class="ad-detail__tag ad-detail__tag--category">{{ ad.category.name }}</span>
+                <span class="ad-detail__tag ad-detail__tag--condition">{{ ad.get_condition_display }}</span>
+                <span class="ad-detail__date">
+                    Опубликовано: {{ ad.created_at|date:"d.m.Y" }}
+                </span>
+            </div>
+            
+            <!-- Описание -->
+            <div class="ad-detail__section">
+                <h3 class="ad-detail__section-title">Описание:</h3>
+                <div class="ad-detail__description">{{ ad.description }}</div>
+            </div>
+            
+            <!-- Что хочет взамен -->
+            <div class="ad-detail__section">
+                <h3 class="ad-detail__section-title">Что хотел бы получить взамен:</h3>
+                <div class="ad-detail__description">{{ ad.exchange_for }}</div>
+            </div>
+            
+            <!-- Кнопки управления -->
+            {% if user == ad.user %}
+                <div class="ad-detail__actions">
+                    <a href="{% url 'barter_app:ad_edit' ad.pk %}" class="button button--primary">Редактировать</a>
+                    <a href="{% url 'barter_app:ad_delete' ad.pk %}" class="button button--danger">Удалить</a>
+                </div>
+            {% endif %}
+        </article>
+    </div>
+    
+    <!-- Боковая панель -->
+    <div class="col-4">
+        <!-- Информация о владельце -->
+        <div class="user-info">
+            <div class="user-info__header">
+                <h3 class="user-info__title">Информация о владельце</h3>
+            </div>
+            <div class="user-info__body">
+                <div class="user-info__row">
+                    <span class="user-info__label">Владелец:</span> {{ ad.user.username }}
+                </div>
+                {% if user.is_authenticated and user != ad.user %}
+                    <!-- Форма предложения обмена (сворачиваемая) -->
+                    <div class="collapse mt-3" id="exchangeProposalForm">
+                        <div class="card card-body">
+                            <h4 class="card-title">Предложить обмен</h4>
+                            <form method="post" action="{% url 'barter_app:create_proposal' ad.id %}">
+                                {% csrf_token %}
+                                <div class="form-group mb-3">
+                                    {{ exchange_form.ad_sender.label_tag }}
+                                    {{ exchange_form.ad_sender }}
+                                    {% if exchange_form.ad_sender.errors %}
+                                        <div class="text-danger">
+                                            {{ exchange_form.ad_sender.errors }}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                                
+                                <div class="form-group mb-3">
+                                    {{ exchange_form.comment.label_tag }}
+                                    {{ exchange_form.comment }}
+                                    {% if exchange_form.comment.errors %}
+                                        <div class="text-danger">
+                                            {{ exchange_form.comment.errors }}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                                
+                                <div class="d-grid">
+                                    <button type="submit" class="button button--primary">Отправить предложение</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+        
+        <!-- Похожие объявления -->
+        {% if similar_ads %}
+            <div class="similar-ads mt-4">
+                <div class="similar-ads__header">
+                    <h3 class="similar-ads__title">Похожие объявления</h3>
+                </div>
+                <ul class="similar-ads__list">
+                    {% for similar_ad in similar_ads %}
+                        <li class="similar-ads__item">
+                            <a href="#" class="similar-ads__link">
+                                <h4 class="similar-ads__title">{{ similar_ad.title }}</h4>
+                                <div class="similar-ads__condition">Состояние: {{ similar_ad.get_condition_display }}</div>
+                            </a>
+                        </li>
+                    {% empty %}
+                        <li class="similar-ads__item">
+                            <div class="similar-ads__empty-message">Нет похожих объявлений</div>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        {% endif %}
+    </div>
+</div>
+
+<div class="back-link mt-4">
+    <a href="{% url 'barter_app:ad_list' %}" class="button button--outline-secondary">← Назад к списку объявлений</a>
+</div>
+{% endblock %}

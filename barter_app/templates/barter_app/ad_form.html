@@ -1,0 +1,161 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+    {% if form.instance.pk %}Редактирование объявления{% else %}Новое объявление{% endif %} | Бартер
+{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-8">
+        <div class="ad-form">
+            <div class="ad-form__header">
+                <h2 class="ad-form__title">
+                    {% if form.instance.pk %}
+                        Редактирование объявления
+                    {% else %}
+                        Новое объявление
+                    {% endif %}
+                </h2>
+            </div>
+            <div class="ad-form__body">
+                <form method="post" class="ad-form__form" novalidate>
+                    {% csrf_token %}
+                    
+                    {% if form.non_field_errors %}
+                        <div class="notification notification--error mb-3">
+                            {% for error in form.non_field_errors %}
+                                {{ error }}
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                    
+                    <!-- Название -->
+                    <div class="ad-form__group">
+                        <label for="{{ form.title.id_for_label }}" class="ad-form__label">
+                            {{ form.title.label }}{% if form.title.field.required %}<span class="ad-form__required">*</span>{% endif %}
+                        </label>
+                        <input type="text" name="{{ form.title.name }}" id="{{ form.title.id_for_label }}" 
+                               class="ad-form__input{% if form.title.errors %} ad-form__input--error{% endif %}" 
+                               value="{{ form.title.value|default:'' }}">
+                        {% if form.title.help_text %}
+                            <span class="ad-form__help">{{ form.title.help_text }}</span>
+                        {% endif %}
+                        {% if form.title.errors %}
+                            <div class="ad-form__error">
+                                {% for error in form.title.errors %}
+                                    {{ error }}
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+                    
+                    <!-- Описание -->
+                    <div class="ad-form__group">
+                        <label for="{{ form.description.id_for_label }}" class="ad-form__label">
+                            {{ form.description.label }}{% if form.description.field.required %}<span class="ad-form__required">*</span>{% endif %}
+                        </label>
+                        <textarea name="{{ form.description.name }}" id="{{ form.description.id_for_label }}" 
+                                  class="ad-form__textarea{% if form.description.errors %} ad-form__textarea--error{% endif %}">{{ form.description.value|default:'' }}</textarea>
+                        {% if form.description.help_text %}
+                            <span class="ad-form__help">{{ form.description.help_text }}</span>
+                        {% endif %}
+                        {% if form.description.errors %}
+                            <div class="ad-form__error">
+                                {% for error in form.description.errors %}
+                                    {{ error }}
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+                    
+                    <!-- URL изображения -->
+                    <div class="ad-form__group">
+                        <label for="{{ form.image_url.id_for_label }}" class="ad-form__label">
+                            {{ form.image_url.label }}{% if form.image_url.field.required %}<span class="ad-form__required">*</span>{% endif %}
+                        </label>
+                        <input type="url" name="{{ form.image_url.name }}" id="{{ form.image_url.id_for_label }}" 
+                               class="ad-form__input{% if form.image_url.errors %} ad-form__input--error{% endif %}" 
+                               value="{{ form.image_url.value|default:'' }}">
+                        {% if form.image_url.help_text %}
+                            <span class="ad-form__help">{{ form.image_url.help_text }}</span>
+                        {% endif %}
+                        {% if form.image_url.errors %}
+                            <div class="ad-form__error">
+                                {% for error in form.image_url.errors %}
+                                    {{ error }}
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="row">
+                        <!-- Категория -->
+                        <div class="col-6">
+                            <div class="ad-form__group">
+                                <label for="{{ form.category.id_for_label }}" class="ad-form__label">
+                                    {{ form.category.label }}{% if form.category.field.required %}<span class="ad-form__required">*</span>{% endif %}
+                                </label>
+                                <select name="{{ form.category.name }}" id="{{ form.category.id_for_label }}" 
+                                       class="ad-form__select{% if form.category.errors %} ad-form__select--error{% endif %}">
+                                    {% for value, text in form.category.field.choices %}
+                                        <option value="{{ value }}" {% if value == form.category.value|stringformat:"i" %}selected{% endif %}>
+                                            {{ text }}
+                                        </option>
+                                    {% endfor %}
+                                </select>
+                                {% if form.category.help_text %}
+                                    <span class="ad-form__help">{{ form.category.help_text }}</span>
+                                {% endif %}
+                                {% if form.category.errors %}
+                                    <div class="ad-form__error">
+                                        {% for error in form.category.errors %}
+                                            {{ error }}
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        
+                        <!-- Состояние -->
+                        <div class="col-6">
+                            <div class="ad-form__group">
+                                <label for="{{ form.condition.id_for_label }}" class="ad-form__label">
+                                    {{ form.condition.label }}{% if form.condition.field.required %}<span class="ad-form__required">*</span>{% endif %}
+                                </label>
+                                <select name="{{ form.condition.name }}" id="{{ form.condition.id_for_label }}" 
+                                       class="ad-form__select{% if form.condition.errors %} ad-form__select--error{% endif %}">
+                                    {% for value, text in form.condition.field.choices %}
+                                        <option value="{{ value }}" {% if value == form.condition.value|stringformat:"i" %}selected{% endif %}>
+                                            {{ text }}
+                                        </option>
+                                    {% endfor %}
+                                </select>
+                                {% if form.condition.help_text %}
+                                    <span class="ad-form__help">{{ form.condition.help_text }}</span>
+                                {% endif %}
+                                {% if form.condition.errors %}
+                                    <div class="ad-form__error">
+                                        {% for error in form.condition.errors %}
+                                            {{ error }}
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="ad-form__actions">
+                        <a href="{% url 'barter_app:ad_list' %}" class="button button--secondary">
+                            Отмена
+                        </a>
+                        <button type="submit" class="button button--primary">
+                            {% if form.instance.pk %}Сохранить{% else %}Опубликовать{% endif %}
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

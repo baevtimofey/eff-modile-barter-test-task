@@ -1,0 +1,138 @@
+/* Pagination component */
+.pagination {
+    margin-top: 30px;
+}
+
+.pagination__list {
+    display: flex;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    justify-content: center;
+}
+
+.pagination__item {
+    margin: 0 3px;
+}
+
+.pagination__link {
+    display: block;
+    padding: 8px 12px;
+    color: #0d6efd;
+    text-decoration: none;
+    border: 1px solid #dee2e6;
+    border-radius: 4px;
+    transition: background-color 0.2s, color 0.2s;
+}
+
+.pagination__link:hover {
+    background-color: #f8f9fa;
+    color: #0a58ca;
+    border-color: #dee2e6;
+}
+
+.pagination__item--active .pagination__current {
+    display: block;
+    padding: 8px 12px;
+    background-color: #0d6efd;
+    color: #fff;
+    border: 1px solid #0d6efd;
+    border-radius: 4px;
+}
+
+/* Ads header component */
+.ads-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.ads-header__title {
+    margin: 0;
+    font-size: 24px;
+}
+
+/* Notification component */
+.notification {
+    padding: 15px;
+    border-radius: 6px;
+    margin-bottom: 20px;
+}
+
+.notification--success {
+    background-color: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+}
+
+.notification--error {
+    background-color: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+}
+
+.notification--warning {
+    background-color: #fff3cd;
+    color: #856404;
+    border: 1px solid #ffeeba;
+}
+
+.notification--info {
+    background-color: #d1ecf1;
+    color: #0c5460;
+    border: 1px solid #bee5eb;
+}
+
+.notification a {
+    color: inherit;
+    font-weight: bold;
+    text-decoration: underline;
+}
+
+.notification a:hover {
+    text-decoration: none;
+}
+
+/* Confirm Delete component */
+.confirm-delete {
+    border: 1px solid #e0e0e0;
+    border-radius: 6px;
+    overflow: hidden;
+}
+
+.confirm-delete__header {
+    background-color: #dc3545;
+    color: white;
+    padding: 15px;
+}
+
+.confirm-delete__title {
+    margin: 0;
+    font-size: 20px;
+    font-weight: 600;
+}
+
+.confirm-delete__body {
+    padding: 20px;
+}
+
+.confirm-delete__message {
+    font-size: 18px;
+    margin-bottom: 15px;
+}
+
+.confirm-delete__warning {
+    color: #721c24;
+    margin-bottom: 20px;
+}
+
+.confirm-delete__form {
+    margin-top: 20px;
+}
+
+.confirm-delete__actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+}

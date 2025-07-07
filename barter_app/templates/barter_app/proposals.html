@@ -1,0 +1,88 @@
+{% extends 'base.html' %}
+
+{% block title %}Мои предложения обмена{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h1 class="mb-4">Мои предложения обмена</h1>
+    
+    <ul class="nav nav-tabs mb-4">
+        <li class="nav-item">
+            <a class="nav-link {% if proposal_type == 'sent' %}active{% endif %}" 
+               href="{% url 'barter_app:proposals' %}?type=sent">
+               Отправленные
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link {% if proposal_type == 'received' %}active{% endif %}" 
+               href="{% url 'barter_app:proposals' %}?type=received">
+               Полученные
+            </a>
+        </li>
+    </ul>
+    
+    {% if proposals %}
+        <div class="row">
+        {% for proposal in proposals %}
+            <div class="col-md-6 mb-4">
+                <div class="card">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <span>Предложение #{{ proposal.id }}</span>
+                        <span class="badge {% if proposal.status == 'pending' %}bg-warning
+                                         {% elif proposal.status == 'accepted' %}bg-success
+                                         {% else %}bg-danger{% endif %}">
+                            {{ proposal.get_status_display }}
+                        </span>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <h5>Ваше объявление:</h5>
+                                {% if proposal_type == 'sent' %}
+                                <p>{{ proposal.ad_sender.title }}</p>
+                                {% else %}
+                                <p>{{ proposal.ad_receiver.title }}</p>
+                                {% endif %}
+                            </div>
+                            <div class="col-md-6">
+                                <h5>Объявление для обмена:</h5>
+                                {% if proposal_type == 'sent' %}
+                                    <p>{{ proposal.ad_receiver.title }}</p>
+                                {% else %}
+                                    <p>{{ proposal.ad_sender.title }}</p>
+                                {% endif %}
+                            </div>
+                        </div>
+                        
+                        {% if proposal.comment %}
+                            <div class="mt-3">
+                                <h6>Комментарий:</h6>
+                                <p>{{ proposal.comment }}</p>
+                            </div>
+                        {% endif %}
+                        
+                        <div class="mt-3">
+                            <p class="text-muted">Создано: {{ proposal.created_at|date:"d.m.Y H:i" }}</p>
+                        </div>
+                        
+                        <div class="mt-3">
+                            <a href="{% url 'barter_app:exchange_proposal_detail' proposal.id %}" class="btn btn-primary">
+                                Просмотреть детали
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+        </div>
+    {% else %}
+        <div class="alert alert-info">
+            {% if proposal_type == 'sent' %}
+                У вас нет отправленных предложений обмена.
+            {% else %}
+                У вас нет полученных предложений обмена.
+            {% endif %}
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+
+{% block title %}Создание предложения обмена{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">
+                    <h3>Создание предложения обмена</h3>
+                </div>
+                <div class="card-body">
+                    <h4>Объявление, на которое вы хотите предложить обмен:</h4>
+                    <div class="card mb-4">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ ad_receiver.title }}</h5>
+                            <p class="card-text">{{ ad_receiver.description|truncatechars:100 }}</p>
+                            <p class="card-text"><small class="text-muted">Владелец: {{ ad_receiver.user.username }}</small></p>
+                        </div>
+                    </div>
+
+                    <form method="post">
+                        {% csrf_token %}
+                        <div class="form-group mb-3">
+                            {{ form.ad_sender.label_tag }}
+                            {{ form.ad_sender }}
+                            {% if form.ad_sender.errors %}
+                                <div class="alert alert-danger mt-1">
+                                    {{ form.ad_sender.errors }}
+                                </div>
+                            {% endif %}
+                            <small class="form-text text-muted">Выберите своё объявление, которое вы предлагаете для обмена</small>
+                        </div>
+
+                        <div class="form-group mb-3">
+                            {{ form.comment.label_tag }}
+                            {{ form.comment }}
+                            {% if form.comment.errors %}
+                                <div class="alert alert-danger mt-1">
+                                    {{ form.comment.errors }}
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        <div class="d-flex justify-content-between">
+                            <a href="#" class="btn btn-secondary">Отмена</a>
+                            <button type="submit" class="btn btn-primary">Отправить предложение</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Бартер{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'barter_app/css/normalize.css' %}">
+    <link rel="stylesheet" href="{% static 'barter_app/css/base.css' %}">
+    <link rel="stylesheet" href="{% static 'barter_app/css/ad.css' %}">
+    <link rel="stylesheet" href="{% static 'barter_app/css/components.css' %}">
+    <link rel="stylesheet" href="{% static 'barter_app/css/search_filters.css' %}">
+    {% block extra_css %}{% endblock %}
+</head>
+<body class="page">
+    <header class="header">
+        <div class="header__container container">
+            <a class="header__brand" href="{% url 'home' %}">
+                Бартер
+            </a>
+            <div class="header__menu">
+                <ul class="main-nav">
+                    <li class="main-nav__item">
+                        <a class="main-nav__link" href="{% url 'barter_app:ad_list' %}">Все объявления</a>
+                    </li>
+                    {% if user.is_authenticated %}
+                        <li class="main-nav__item">
+                            <a class="main-nav__link" href="{% url 'barter_app:ad_create' %}">Новое объявление</a>
+                        </li>
+                    {% endif %}
+                </ul>
+                <div class="user-menu">
+                    {% if user.is_authenticated %}
+                        <span class="user-menu__item">{{ user.username }}</span>
+                        <a class="user-menu__link" href="#">Выйти</a>
+                    {% else %}
+                        <a class="user-menu__link" href="#">Войти</a>
+                        <a class="user-menu__link ml-2" href="#">Регистрация</a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="main">
+        <div class="container">
+            {% if messages %}
+                <div class="messages">
+                    {% for message in messages %}
+                        <div class="message message--{{ message.tags }}">
+                            {{ message }}
+                            <button type="button" class="message__close" aria-label="Close">&times;</button>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+
+            {% block content %}{% endblock %}
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="footer__container container">
+            <p class="footer__text">© 2025 Бартер — Платформа для обмена товарами</p>
+        </div>
+    </footer>
+
+    <script src="{% static 'barter_app/js/main.js' %}"></script>
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

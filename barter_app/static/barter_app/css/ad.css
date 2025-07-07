@@ -1,0 +1,378 @@
+/* Ad components */
+.ad-card {
+    border: 1px solid #e0e0e0;
+    border-radius: 6px;
+    overflow: hidden;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    transition: box-shadow 0.3s ease;
+}
+
+.ad-card:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.ad-card__image {
+    position: relative;
+    padding-bottom: 60%;
+    overflow: hidden;
+    background-color: #f8f9fa;
+}
+
+.ad-card__image-img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.ad-card__image-placeholder {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #6c757d;
+    font-size: 14px;
+}
+
+.ad-card__content {
+    padding: 15px;
+    flex-grow: 1;
+}
+
+.ad-card__title {
+    margin: 0 0 8px 0;
+    font-size: 18px;
+    font-weight: 600;
+    color: #212529;
+}
+
+.ad-card__meta {
+    color: #6c757d;
+    font-size: 14px;
+    margin-bottom: 10px;
+}
+
+.ad-card__description {
+    font-size: 14px;
+    color: #495057;
+    margin: 0;
+}
+
+.ad-card__footer {
+    padding: 15px;
+    background-color: #f8f9fa;
+    border-top: 1px solid #e0e0e0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.ad-card__date {
+    color: #6c757d;
+    font-size: 14px;
+}
+
+/* Ad Detail Component */
+.ad-detail {
+    margin-bottom: 30px;
+}
+
+.ad-detail__header {
+    margin-bottom: 20px;
+}
+
+.ad-detail__title {
+    margin: 0 0 10px 0;
+    font-size: 28px;
+    font-weight: 600;
+    color: #212529;
+}
+
+.ad-detail__meta {
+    display: flex;
+    color: #6c757d;
+    font-size: 16px;
+    margin-bottom: 5px;
+}
+
+.ad-detail__meta-item {
+    margin-right: 15px;
+}
+
+.ad-detail__content {
+    margin-bottom: 20px;
+}
+
+.ad-detail__image {
+    margin-bottom: 20px;
+    border-radius: 6px;
+    overflow: hidden;
+}
+
+.ad-detail__image img {
+    width: 100%;
+    border-radius: 6px;
+    display: block;
+}
+
+.ad-detail__image-placeholder {
+    background-color: #f8f9fa;
+    height: 300px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #6c757d;
+    font-size: 16px;
+    border-radius: 6px;
+}
+
+.ad-detail__description {
+    font-size: 16px;
+    line-height: 1.6;
+    margin-bottom: 30px;
+}
+
+.ad-detail__actions {
+    margin-top: 20px;
+    display: flex;
+    gap: 10px;
+}
+
+/* User Info Component */
+.user-info {
+    border: 1px solid #e0e0e0;
+    border-radius: 6px;
+    padding: 20px;
+    margin-bottom: 30px;
+}
+
+.user-info__title {
+    font-size: 18px;
+    font-weight: 600;
+    margin: 0 0 15px 0;
+}
+
+.user-info__details {
+    margin-bottom: 15px;
+}
+
+.user-info__name {
+    font-weight: 600;
+    margin-bottom: 5px;
+}
+
+.user-info__date {
+    color: #6c757d;
+    font-size: 14px;
+}
+
+/* Similar Ads Component */
+.similar-ads {
+    margin-top: 40px;
+}
+
+.similar-ads__title {
+    font-size: 24px;
+    font-weight: 600;
+    margin-bottom: 20px;
+}
+
+.similar-ads__list {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+}
+
+@media (max-width: 768px) {
+    .similar-ads__list {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 576px) {
+    .similar-ads__list {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Categories Component */
+.categories {
+    margin-bottom: 30px;
+}
+
+.categories__list {
+    display: flex;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.categories__item {
+    margin: 0;
+}
+
+/* Ad Form Component */
+.ad-form {
+    border: 1px solid #e0e0e0;
+    border-radius: 6px;
+    overflow: hidden;
+}
+
+.ad-form__header {
+    background-color: #0d6efd;
+    color: white;
+    padding: 15px;
+}
+
+.ad-form__title {
+    margin: 0;
+    font-size: 20px;
+    font-weight: 600;
+}
+
+.ad-form__body {
+    padding: 20px;
+}
+
+.ad-form__group {
+    margin-bottom: 20px;
+}
+
+.ad-form__label {
+    display: block;
+    margin-bottom: 6px;
+    font-weight: bold;
+}
+
+.ad-form__required {
+    color: #dc3545;
+}
+
+.ad-form__input,
+.ad-form__textarea,
+.ad-form__select {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+    font-size: 16px;
+}
+
+.ad-form__textarea {
+    min-height: 150px;
+    resize: vertical;
+}
+
+.ad-form__help {
+    display: block;
+    margin-top: 5px;
+    color: #6c757d;
+    font-size: 14px;
+}
+
+.ad-form__error {
+    color: #dc3545;
+    margin-top: 5px;
+    font-size: 14px;
+}
+
+.ad-form__actions {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 30px;
+}
+
+/* User info */
+.user-info {
+    border: 1px solid #e0e0e0;
+    border-radius: 6px;
+    overflow: hidden;
+    margin-bottom: 20px;
+}
+
+.user-info__header {
+    background-color: #0d6efd;
+    color: white;
+    padding: 12px 15px;
+}
+
+.user-info__title {
+    margin: 0;
+    font-size: 18px;
+}
+
+.user-info__body {
+    padding: 15px;
+}
+
+.user-info__row {
+    margin-bottom: 10px;
+}
+
+.user-info__label {
+    font-weight: bold;
+}
+
+/* Similar ads */
+.similar-ads {
+    border: 1px solid #e0e0e0;
+    border-radius: 6px;
+    overflow: hidden;
+}
+
+.similar-ads__header {
+    background-color: #f8f9fa;
+    padding: 12px 15px;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.similar-ads__title {
+    margin: 0;
+    font-size: 18px;
+}
+
+.similar-ads__list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.similar-ads__item {
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.similar-ads__item:last-child {
+    border-bottom: none;
+}
+
+.similar-ads__link {
+    display: block;
+    padding: 12px 15px;
+    color: #333;
+    text-decoration: none;
+    transition: background-color 0.2s;
+}
+
+.similar-ads__link:hover {
+    background-color: #f8f9fa;
+}
+
+.similar-ads__title {
+    margin: 0 0 5px 0;
+    font-size: 16px;
+}
+
+.similar-ads__condition {
+    color: #6c757d;
+    font-size: 14px;
+}

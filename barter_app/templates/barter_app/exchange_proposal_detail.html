@@ -1,0 +1,107 @@
+{% extends 'base.html' %}
+
+{% block title %}Детали предложения обмена{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-10">
+            <div class="card mb-4">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h3>Предложение обмена #{{ proposal.id }}</h3>
+                    <span class="badge {% if proposal.status == 'pending' %}bg-warning
+                                     {% elif proposal.status == 'accepted' %}bg-success
+                                     {% else %}bg-danger{% endif %}">
+                        {{ proposal.get_status_display }}
+                    </span>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="card mb-3">
+                                <div class="card-header">
+                                    <h5>Отправитель предлагает:</h5>
+                                </div>
+                                <div class="card-body">
+                                    <h4>{{ proposal.ad_sender.title }}</h4>
+                                    <p>{{ proposal.ad_sender.description }}</p>
+                                    <p>
+                                        <strong>Категория:</strong> {{ proposal.ad_sender.category.name }}<br>
+                                        <strong>Состояние:</strong> {{ proposal.ad_sender.get_condition_display }}<br>
+                                        <strong>Владелец:</strong> {{ proposal.ad_sender.user.username }}
+                                    </p>
+                                    {% if proposal.ad_sender.image_url %}
+                                        <img src="{{ proposal.ad_sender.image_url }}" alt="{{ proposal.ad_sender.title }}" class="img-thumbnail mt-2" style="max-height: 200px;">
+                                    {% endif %}
+                                    <div class="mt-3">
+                                        <a href="#" class="btn btn-outline-primary btn-sm">
+                                            Просмотреть объявление
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="card mb-3">
+                                <div class="card-header">
+                                    <h5>В обмен на:</h5>
+                                </div>
+                                <div class="card-body">
+                                    <h4>{{ proposal.ad_receiver.title }}</h4>
+                                    <p>{{ proposal.ad_receiver.description }}</p>
+                                    <p>
+                                        <strong>Категория:</strong> {{ proposal.ad_receiver.category.name }}<br>
+                                        <strong>Состояние:</strong> {{ proposal.ad_receiver.get_condition_display }}<br>
+                                        <strong>Владелец:</strong> {{ proposal.ad_receiver.user.username }}
+                                    </p>
+                                    {% if proposal.ad_receiver.image_url %}
+                                        <img src="{{ proposal.ad_receiver.image_url }}" alt="{{ proposal.ad_receiver.title }}" class="img-thumbnail mt-2" style="max-height: 200px;">
+                                    {% endif %}
+                                    <div class="mt-3">
+                                        <a href="#" class="btn btn-outline-primary btn-sm">
+                                            Просмотреть объявление
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    {% if proposal.comment %}
+                    <div class="card mt-3">
+                        <div class="card-header">
+                            <h5>Комментарий к предложению:</h5>
+                        </div>
+                        <div class="card-body">
+                            <p>{{ proposal.comment }}</p>
+                        </div>
+                    </div>
+                    {% endif %}
+                    
+                    <div class="d-flex justify-content-between mt-4">
+                        <div>
+                            <p class="text-muted">Дата создания: {{ proposal.created_at|date:"d.m.Y H:i" }}</p>
+                        </div>
+                        
+                        {% if proposal.status == 'pending' and user == proposal.ad_receiver.user %}
+                        <div class="d-flex gap-2">
+                            <form method="post" action="{% url 'barter_app:update_proposal_status' proposal.id %}">
+                                {% csrf_token %}
+                                {{ status_form.as_p }}
+                                <button type="submit" class="btn btn-success">Обновить статус</button>
+                            </form>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            
+            <div class="d-flex justify-content-center">
+                <a href="{% url 'barter_app:proposals' %}" class="btn btn-secondary">
+                    Назад к списку предложений
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

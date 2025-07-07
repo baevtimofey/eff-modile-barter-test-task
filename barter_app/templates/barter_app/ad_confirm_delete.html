@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Удаление объявления | Бартер{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-6">
+        <div class="confirm-delete">
+            <div class="confirm-delete__header">
+                <h2 class="confirm-delete__title">Подтвердите удаление</h2>
+            </div>
+            <div class="confirm-delete__body">
+                <p class="confirm-delete__message">Вы действительно хотите удалить объявление "{{ object.title }}"?</p>
+                <p class="confirm-delete__warning">Это действие нельзя будет отменить.</p>
+                
+                <form method="post" class="confirm-delete__form">
+                    {% csrf_token %}
+                    <div class="confirm-delete__actions">
+                        <a href="#" class="button button--secondary">
+                            Отмена
+                        </a>
+                        <button type="submit" class="button button--danger">
+                            Удалить
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
