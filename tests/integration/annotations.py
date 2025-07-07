@@ -9,7 +9,7 @@ class AdCreationData(TypedDict, total=False):
 
     title: str
     description: str
-    image_url: str
+    image: str
     category: int
     condition: str
 

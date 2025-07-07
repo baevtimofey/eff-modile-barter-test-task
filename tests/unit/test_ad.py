@@ -34,7 +34,7 @@ def test_create_ad(
     input_data = CreateAdDTO(
         title="Test Ad",
         description="Test Description",
-        image_url="https://example.com/image.jpg",
+        image="https://example.com/image.jpg",
         category_id=1,
         condition="new",
     )

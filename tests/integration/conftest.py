@@ -36,7 +36,7 @@ def ad_creation_data_factory(
             schema=lambda: {
                 "title": mf("text.word"),
                 "description": mf("text.text"),
-                "image_url": mf("internet.url"),
+                "image": mf("internet.url"),
             },
             iterations=1,
         )

@@ -9,8 +9,8 @@
         <article class="ad-detail">
             <!-- Изображение -->
             <div class="ad-detail__image">
-                {% if ad.image_url %}
-                    <img class="ad-detail__image-img" src="{{ ad.image_url }}" alt="{{ ad.title }}">
+                {% if ad.image %}
+                    <img class="ad-detail__image-img" src="{{ ad.image }}" alt="{{ ad.title }}">
                 {% else %}
                     <span class="ad-detail__image-placeholder">Нет изображения</span>
                 {% endif %}
