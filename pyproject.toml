@@ -94,7 +94,23 @@ select = [
 ]
 ignore = ["E501", "E203", "D"]
 
+[tool.ruff.lint.per-file-ignores]
+"tests/**/*.py" = ["S101", "S105", "S311"]
+"manage.py" = ["ALL"]
+
+[[tool.mypy.overrides]]
+module = "barter_app.models"
+disable_error_code = "var-annotated"
+
 [tool.ruff.format]
 quote-style = "double"
 indent-style = "space"
 line-ending = "auto"
+
+[tool.pytest.ini_options]
+DJANGO_SETTINGS_MODULE = "barter_project.settings"
+python_files = "test_*.py"
+python_classes = "Test*"
+python_functions = "test_*"
+testpaths = ["tests"]
+addopts = "--create-db --no-migrations --cov=barter_app --cov-report=term-missing"
