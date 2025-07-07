@@ -12,6 +12,13 @@ python-dotenv = "^1.1.1"
 
 [tool.poetry.group.dev.dependencies]
 ruff = "^0.12.1"
+pytest = "^8.0.0"
+pytest-django = "^4.8.0"
+pytest-cov = "^4.1.0"
+factory-boy = "^3.3.0"
+mimesis = "^18.0.0"
+mypy = "^1.16.1"
+django-stubs = "^5.2.1"
 
 [build-system]
 requires = ["poetry-core"]
