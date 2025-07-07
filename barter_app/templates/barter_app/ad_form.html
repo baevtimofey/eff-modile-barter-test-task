@@ -71,18 +71,18 @@
                     
                     <!-- URL изображения -->
                     <div class="ad-form__group">
-                        <label for="{{ form.image_url.id_for_label }}" class="ad-form__label">
-                            {{ form.image_url.label }}{% if form.image_url.field.required %}<span class="ad-form__required">*</span>{% endif %}
+                        <label for="{{ form.image.id_for_label }}" class="ad-form__label">
+                            {{ form.image.label }}{% if form.image.field.required %}<span class="ad-form__required">*</span>{% endif %}
                         </label>
-                        <input type="url" name="{{ form.image_url.name }}" id="{{ form.image_url.id_for_label }}" 
-                               class="ad-form__input{% if form.image_url.errors %} ad-form__input--error{% endif %}" 
-                               value="{{ form.image_url.value|default:'' }}">
-                        {% if form.image_url.help_text %}
-                            <span class="ad-form__help">{{ form.image_url.help_text }}</span>
+                        <input type="url" name="{{ form.image.name }}" id="{{ form.image.id_for_label }}" 
+                               class="ad-form__input{% if form.image.errors %} ad-form__input--error{% endif %}" 
+                               value="{{ form.image.value|default:'' }}">
+                        {% if form.image.help_text %}
+                            <span class="ad-form__help">{{ form.image.help_text }}</span>
                         {% endif %}
-                        {% if form.image_url.errors %}
+                        {% if form.image.errors %}
                             <div class="ad-form__error">
-                                {% for error in form.image_url.errors %}
+                                {% for error in form.image.errors %}
                                     {{ error }}
                                 {% endfor %}
                             </div>

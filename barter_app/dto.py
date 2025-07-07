@@ -10,7 +10,7 @@ class BaseAdDTO:
     category_id: int
     condition: str
     user_id: int | None = None
-    image_url: str | None = dataclasses.field(default="")
+    image: str | None = dataclasses.field(default="")
 
     def to_dict(self) -> dict:
         """Преобразует DTO в словарь для передачи в репозиторий."""

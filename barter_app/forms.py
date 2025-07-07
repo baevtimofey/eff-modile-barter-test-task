@@ -16,7 +16,7 @@ class AdForm(django.forms.ModelForm):
 
     class Meta:
         model = models.Ad
-        fields = ["title", "description", "image_url", "category", "condition"]
+        fields = ["title", "description", "image", "category", "condition"]
 
     def __init__(self, *args: P.args, **kwargs: P.kwargs) -> None:
         self.user = kwargs.pop("user", None)
@@ -26,7 +26,7 @@ class AdForm(django.forms.ModelForm):
         self.fields["description"].help_text = _(
             "Укажите состояние, особенности и причину обмена"
         )
-        self.fields["image_url"].help_text = _("Ссылка на изображение товара")
+        self.fields["image"].help_text = _("Ссылка на изображение товара")
 
     def get_data(self) -> dto.CreateAdDTO:
         return dto.CreateAdDTO(
@@ -35,7 +35,7 @@ class AdForm(django.forms.ModelForm):
             category_id=self.cleaned_data["category"].id,
             condition=self.cleaned_data["condition"],
             user_id=self.user.id,
-            image_url=self.cleaned_data["image_url"],
+            image=self.cleaned_data["image"],
         )
 
 

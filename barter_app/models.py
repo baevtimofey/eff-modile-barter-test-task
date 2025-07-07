@@ -47,9 +47,11 @@ class Ad(models.Model):
         max_length=200,
     )
     description = models.TextField(_("Описание"))
-    image_url = models.URLField(
+    image = models.ImageField(
         _("URL изображения"),
         blank=True,
+        upload_to="photos/%Y/%m/%d/",
+        null=True,
     )
     category = models.ForeignKey(
         Category,

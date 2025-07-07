@@ -24,9 +24,9 @@
                 {% for ad in ads %}
                     <div class="col-4 mb-4">
                         <article class="ad-card">
-                            {% if ad.image_url %}
+                            {% if ad.image %}
                                 <div class="ad-card__image">
-                                    <img class="ad-card__image-img" src="{{ ad.image_url }}" alt="{{ ad.title }}">
+                                    <img class="ad-card__image-img" src="{{ ad.image }}" alt="{{ ad.title }}">
                                 </div>
                             {% else %}
                                 <div class="ad-card__image">
