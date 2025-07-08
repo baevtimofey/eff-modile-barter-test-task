@@ -1,6 +1,8 @@
 import random
 from typing import Unpack
 
+import django.core.files.uploadedfile
+import mimesis
 import mimesis.schema
 import pytest
 
@@ -32,11 +34,17 @@ def ad_creation_data_factory(
         **fields: Unpack[annotations.AdCreationData],
     ) -> annotations.AdCreationData:
         mf = mimesis.schema.Field()
+        bf = mimesis.BinaryFile()
+
         schema = mimesis.schema.Schema(
             schema=lambda: {
                 "title": mf("text.word"),
                 "description": mf("text.text"),
-                "image": mf("internet.url"),
+                "image": django.core.files.uploadedfile.SimpleUploadedFile(
+                    name=f"test_{mf('text.word')}.png",
+                    content=bf.image(),
+                    content_type="image/png",
+                ),
             },
             iterations=1,
         )
@@ -76,6 +84,8 @@ def assert_correct_ad() -> annotations.AdAssertion:
     ) -> None:
         ad = barter_app.models.Ad.objects.get(title=title)
         assert ad.created_at is not None
+        assert ad.image.name is not None
+        expected.pop("image")
         assert ad.category.pk == expected.pop("category")
         for field_name, date_value in expected.items():
             assert getattr(ad, field_name) == date_value

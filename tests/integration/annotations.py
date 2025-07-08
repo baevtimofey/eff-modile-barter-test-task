@@ -1,6 +1,7 @@
 from collections.abc import Callable
 from typing import Protocol, TypedDict, Unpack, final
 
+import django.core.files.uploadedfile
 import mypy_extensions
 
 
@@ -9,7 +10,7 @@ class AdCreationData(TypedDict, total=False):
 
     title: str
     description: str
-    image: str
+    image: django.core.files.uploadedfile.SimpleUploadedFile
     category: int
     condition: str
 
