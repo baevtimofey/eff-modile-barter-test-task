@@ -26,7 +26,7 @@ class AdForm(django.forms.ModelForm):
         self.fields["description"].help_text = _(
             "Укажите состояние, особенности и причину обмена"
         )
-        self.fields["image"].help_text = _("Ссылка на изображение товара")
+        self.fields["image"].help_text = _("Загрузите изображение товара")
 
     def get_data(self) -> dto.CreateAdDTO:
         return dto.CreateAdDTO(

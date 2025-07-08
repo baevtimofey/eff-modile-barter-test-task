@@ -19,7 +19,7 @@
                 </h2>
             </div>
             <div class="ad-form__body">
-                <form method="post" class="ad-form__form" novalidate>
+                <form method="post" enctype="multipart/form-data" class="ad-form__form" novalidate>
                     {% csrf_token %}
                     
                     {% if form.non_field_errors %}
@@ -69,14 +69,14 @@
                         {% endif %}
                     </div>
                     
-                    <!-- URL изображения -->
+                    <!-- Изображение -->
                     <div class="ad-form__group">
                         <label for="{{ form.image.id_for_label }}" class="ad-form__label">
                             {{ form.image.label }}{% if form.image.field.required %}<span class="ad-form__required">*</span>{% endif %}
                         </label>
-                        <input type="url" name="{{ form.image.name }}" id="{{ form.image.id_for_label }}" 
+                        <input type="file" name="{{ form.image.name }}" id="{{ form.image.id_for_label }}" 
                                class="ad-form__input{% if form.image.errors %} ad-form__input--error{% endif %}" 
-                               value="{{ form.image.value|default:'' }}">
+                               accept="image/*">
                         {% if form.image.help_text %}
                             <span class="ad-form__help">{{ form.image.help_text }}</span>
                         {% endif %}

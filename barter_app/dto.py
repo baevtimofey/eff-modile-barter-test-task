@@ -1,5 +1,7 @@
 import dataclasses
 
+import django.core.files.base
+
 
 @dataclasses.dataclass
 class BaseAdDTO:
@@ -10,11 +12,18 @@ class BaseAdDTO:
     category_id: int
     condition: str
     user_id: int | None = None
-    image: str | None = dataclasses.field(default="")
+    image: django.core.files.base.File | None = dataclasses.field(default=None)
 
     def to_dict(self) -> dict:
         """Преобразует DTO в словарь для передачи в репозиторий."""
-        return dataclasses.asdict(self)
+        return {
+            "title": self.title,
+            "description": self.description,
+            "category_id": self.category_id,
+            "condition": self.condition,
+            "user_id": self.user_id,
+            "image": self.image,
+        }
 
 
 @dataclasses.dataclass
