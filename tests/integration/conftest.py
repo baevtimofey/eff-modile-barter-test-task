@@ -14,7 +14,7 @@ from tests.integration import annotations
 def category() -> barter_app.models.Category:
     mf = mimesis.schema.Field()
     return barter_app.models.Category.objects.create(
-        name=mf("text.title"),
+        name=mf("text.word"),
     )
 
 
