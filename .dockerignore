@@ -1,0 +1,24 @@
+# Исключаем папки media и static
+media/*
+static/*
+
+# Не игнорируем сами директории
+!media/.gitkeep
+!static/.gitkeep
+
+# Прочие файлы, которые не нужны в контейнере
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+.env
+.venv
+venv/
+ENV/
+env.bak/
+venv.bak/
+.git/
+.github/
+.pytest_cache/
