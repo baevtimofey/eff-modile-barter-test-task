@@ -1,3 +1,5 @@
+from typing import cast
+
 import django.contrib.auth.mixins
 import django.contrib.messages
 import django.db.models
@@ -32,7 +34,7 @@ class AdListView(django.views.generic.ListView):
             condition=self.request.GET.get("condition"),
         )
 
-    def get_context_data(self, **kwargs: dict) -> dict:
+    def get_context_data(self, **kwargs: dict) -> dict:  # type: ignore [override]
         context = super().get_context_data(**kwargs)
         context["categories"] = self.category_service.get_all_categories()
         context["q"] = self.request.GET.get("q", "")
@@ -60,7 +62,7 @@ class AdCreateView(
         return kwargs
 
     def form_valid(self, form: forms.AdForm) -> django.http.HttpResponseRedirect:
-        ad_in = form.get_data()
+        ad_in = form.get_create_data()
         self.ad_service.create_ad(ad_in=ad_in)
         django.contrib.messages.success(
             self.request,
@@ -82,7 +84,7 @@ class AdUpdateView(
     template_name = "barter_app/ad_form.html"
     success_url = django.urls.reverse_lazy("barter_app:ad_list")
 
-    def get_object(self) -> models.Ad:
+    def get_object(self) -> models.Ad:  # type: ignore [override]
         try:
             return self.ad_service.get_ad_by_id(ad_id=self.kwargs["pk"])
         except exceptions.AdDoesNotExistError as err:
@@ -97,7 +99,7 @@ class AdUpdateView(
         return kwargs
 
     def form_valid(self, form: forms.AdForm) -> django.http.HttpResponseRedirect:
-        ad_edit = form.get_data()
+        ad_edit = form.get_update_data()
         self.ad_service.update_ad(
             ad_edit=ad_edit,
             ad_id=self.kwargs["pk"],
@@ -121,7 +123,7 @@ class AdDeleteView(
     template_name = "barter_app/ad_confirm_delete.html"
     success_url = django.urls.reverse_lazy("barter_app:ad_list")
 
-    def get_object(self) -> models.Ad:
+    def get_object(self) -> models.Ad:  # type: ignore [override]
         try:
             return self.ad_service.get_ad_by_id(ad_id=self.kwargs["pk"])
         except exceptions.AdDoesNotExistError as err:
@@ -130,7 +132,7 @@ class AdDeleteView(
     def test_func(self) -> bool:
         return self.get_object().user == self.request.user
 
-    def delete(self) -> django.http.HttpResponseRedirect:
+    def delete(self) -> django.http.HttpResponseRedirect:  # type: ignore [override]
         self.ad_service.delete_ad(ad_id=self.kwargs["pk"])
         return django.http.HttpResponseRedirect(redirect_to=self.success_url)
 
@@ -146,7 +148,7 @@ class AdDetailView(
     template_name = "barter_app/ad_detail.html"
     context_object_name = "ad"
 
-    def get_object(self) -> models.Ad:
+    def get_object(self) -> models.Ad:  # type: ignore [override]
         try:
             return self.ad_service.get_ad_by_id(ad_id=self.kwargs["pk"])
         except exceptions.AdDoesNotExistError as err:
@@ -156,8 +158,8 @@ class AdDetailView(
         context = super().get_context_data(**kwargs)
         if (sender := self.request.user) != (receiver := self.object.user):
             exchange_ads = self.ad_service.get_available_exchange_ads(
-                sender_id=sender.id,
-                receiver_id=receiver.id,
+                sender_id=cast("int", sender.pk),
+                receiver_id=cast("int", receiver.pk),
             )
             context["exchange_form"] = forms.ExchangeProposalForm(
                 exchange_ads=exchange_ads,
@@ -212,15 +214,18 @@ class ProposalsListView(
 
     def get_queryset(self) -> django.db.models.QuerySet[models.ExchangeProposal]:
         self.proposal_type = self.request.GET.get("type", "sent")
+        user_id = cast("int", self.request.user.pk)
+
         if self.proposal_type == "received":
             return self.exchange_service.get_received_proposals(
-                user_id=self.request.user.id,
+                user_id=user_id,
             )
+
         return self.exchange_service.get_sent_proposals(
-            user_id=self.request.user.id,
+            user_id=user_id,
         )
 
-    def get_context_data(self, **kwargs: dict) -> dict:
+    def get_context_data(self, **kwargs: dict) -> dict:  # type: ignore [override]
         context = super().get_context_data(**kwargs)
         context["proposal_type"] = self.proposal_type
         return context
@@ -239,7 +244,7 @@ class ExchangeProposalDetailView(
         services.ExchangeProposalService()
     )
 
-    def get_object(self) -> models.ExchangeProposal:
+    def get_object(self) -> models.ExchangeProposal:  # type: ignore [override]
         try:
             proposal = self.exchange_service.get_proposal_by_id(
                 proposal_id=self.kwargs["pk"]
@@ -286,7 +291,7 @@ class UpdateProposalStatusView(
             return self.exchange_service.get_proposal_by_id(
                 proposal_id=self.proposal_id
             )
-        except exceptions.DoesNotExistError as err:
+        except exceptions.ProposalDoesNotExistError as err:
             raise django.http.Http404 from err
 
     def form_valid(

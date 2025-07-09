@@ -65,7 +65,7 @@ class AdRepository(base.BaseRepository[models.Ad]):
         self,
         *,
         user_id: int,
-        sender_ids: django.db.models.QuerySet[int],
+        sender_ids: django.db.models.QuerySet[int],  # type: ignore [type-var]
     ) -> django.db.models.QuerySet[models.Ad]:
         """Получает доступные объявления для обмена."""
         return self._model_class.objects.filter(user_id=user_id).exclude(

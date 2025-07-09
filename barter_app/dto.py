@@ -11,7 +11,7 @@ class BaseAdDTO:
     description: str
     category_id: int
     condition: str
-    user_id: int | None = None
+    user_id: int
     image: django.core.files.base.File | None = dataclasses.field(default=None)
 
     def to_dict(self) -> dict:

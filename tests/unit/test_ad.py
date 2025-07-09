@@ -36,6 +36,7 @@ def test_create_ad(
         description="Test Description",
         category_id=1,
         condition="new",
+        user_id=1,
     )
     ad_service.create_ad(ad_in=input_data)
 
@@ -51,6 +52,7 @@ def test_update_ad(
         description="Test Description",
         category_id=2,
         condition="new",
+        user_id=1,
     )
     ad_service.update_ad(
         ad_edit=input_data,

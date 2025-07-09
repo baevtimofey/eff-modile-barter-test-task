@@ -15,7 +15,7 @@ class ExchangeProposalRepository(base.BaseRepository[models.ExchangeProposal]):
         self,
         *,
         receiver_id: int,
-    ) -> django.db.models.QuerySet[int]:
+    ) -> django.db.models.QuerySet:
         """Получить идентификаторы отправителей существующих предложений обмена."""
         return self._model_class.objects.filter(ad_receiver_id=receiver_id).values_list(
             "ad_sender_id", flat=True

@@ -1,4 +1,4 @@
-from typing import ParamSpec
+from typing import ParamSpec, cast
 
 import django.forms
 from django.utils.translation import gettext_lazy as _
@@ -18,7 +18,7 @@ class AdForm(django.forms.ModelForm):
         model = models.Ad
         fields = ["title", "description", "image", "category", "condition"]
 
-    def __init__(self, *args: P.args, **kwargs: P.kwargs) -> None:
+    def __init__(self, *args: P.args, **kwargs: P.kwargs) -> None:  # type: ignore [valid-type]
         self.user = kwargs.pop("user", None)
         super().__init__(*args, **kwargs)
 
@@ -28,7 +28,7 @@ class AdForm(django.forms.ModelForm):
         )
         self.fields["image"].help_text = _("Загрузите изображение товара")
 
-    def get_data(self) -> dto.CreateAdDTO:
+    def get_create_data(self) -> dto.CreateAdDTO:
         return dto.CreateAdDTO(
             title=self.cleaned_data["title"],
             description=self.cleaned_data["description"],
@@ -36,6 +36,15 @@ class AdForm(django.forms.ModelForm):
             condition=self.cleaned_data["condition"],
             user_id=self.user.id,
             image=self.cleaned_data["image"],
+        )
+
+    def get_update_data(self) -> dto.UpdateAdDTO:
+        update_data = {
+            key: value for key, value in self.cleaned_data.items() if value is not None
+        }
+        return dto.UpdateAdDTO(
+            **update_data,
+            user_id=self.user.id,
         )
 
 
@@ -46,12 +55,15 @@ class ExchangeProposalForm(django.forms.ModelForm):
         model = models.ExchangeProposal
         fields = ["comment", "ad_sender"]
 
-    def __init__(self, *args: P.args, **kwargs: P.kwargs) -> None:
+    def __init__(self, *args: P.args, **kwargs: P.kwargs) -> None:  # type: ignore [valid-type]
         exchange_ads = kwargs.pop("exchange_ads", None)
         self.ad_receiver_id = kwargs.pop("ad_receiver_id", None)
         super().__init__(*args, **kwargs)
         if exchange_ads is not None:
-            self.fields["ad_sender"].queryset = exchange_ads
+            ad_sender_field = cast(
+                "django.forms.ModelChoiceField", self.fields["ad_sender"]
+            )
+            ad_sender_field.queryset = exchange_ads
 
     def get_data(self) -> dto.ExchangeProposalDTO:
         return dto.ExchangeProposalDTO(

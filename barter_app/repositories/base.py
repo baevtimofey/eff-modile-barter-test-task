@@ -15,6 +15,6 @@ class BaseRepository[T]:
     ) -> None:
         self._model_class = model_class
 
-    def get_all(self) -> django.db.models.QuerySet[T]:
+    def get_all(self) -> django.db.models.QuerySet[T]:  # type: ignore [type-var]
         """Получает все объекты."""
-        return self._model_class.objects.all()
+        return self._model_class.objects.all()  # type: ignore [attr-defined]
